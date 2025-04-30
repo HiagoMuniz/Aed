@@ -3,14 +3,18 @@
 #include <string.h>
 
 int Menu();
-void Adicionar(char stringNomes[], int ultimoIndex);
+void Adicionar(char **pointer);
+void Listar(char *pointer);
 
 int main(void){
 
     int decide = -1;
-    char stringNomes[0];
-    int ultimoIndex = 0;
-    int tamStrings[100];
+    char *pointer;
+
+    pointer = malloc(1);
+    pointer[0] = '\0';
+
+
     for (;;){
         
         decide = Menu();
@@ -18,15 +22,16 @@ int main(void){
         switch (decide)
         {
         case 1:
-            Adicionar(stringNomes, ultimoIndex);
+            Adicionar(&pointer);
             break;
         case 2:
             //Remover();
             break;
         case 3:
-           //Listar();
+           Listar(pointer);
             break;
         case 4:
+            free(pointer);
             exit(1);
             break;
         }
@@ -37,61 +42,55 @@ int main(void){
 
 int Menu(){
     int c;
-    printf("\t 1. para adicionar nome\n");
-    printf("\t 2. para remover nome\n");
-    printf("\t 3. para listar os nome\n");
-    printf("\t 4. para sair\n");
-    scanf("%d", &c);
+    do
+    {
+        printf("\t 1. para adicionar nome\n");
+        printf("\t 2. para remover nome\n");
+        printf("\t 3. para listar os nome\n");
+        printf("\t 4. para sair\n");
+        scanf("%d", &c);
+    } while (c < 1 || c > 4);
+    
     return c;
 
 }
 
-void Adicionar(char stringNomes[], int ultimoIndex){
-    int tamanho = 0;
+void Adicionar(char **pointer){
+    int tamanho=0;
     char nome[100];
-    char *pointer;
-
-    int tamanhoAtual = strlen(stringNomes);
+    char *reservePointer;
 
     printf("Qual nome você quer adicionar?");
     scanf(" %[^\n]s", nome);
 
-    tamanho = strlen(nome) + 1;
-
-    pointer = &stringNomes[0];
-
-
-    for (int i = 0; i < tamanho; i++){
-        stringNomes[tamanhoAtual] = nome[i];
-        tamanhoAtual++;
+    if (*pointer){
+        tamanho = (strlen(*pointer));
     }
 
-    stringNomes[tamanhoAtual + 1] = '$';
+    tamanho += strlen(nome) + 2;
+
+    reservePointer = (char *) realloc(*pointer, sizeof(char)*tamanho);
+    if (reservePointer){
+        *pointer = reservePointer;
+    }
+
+    strcat(*pointer, nome);
+    strcat(*pointer, "$");
 }
 
+void Listar(char *pointer){
+    char nomePrint[100];
+    int count=0;
 
-
-int Remover(char stringNomes[], int ultimoIndex){
-    int i = 0;
-    char nomeComp[100];
-    char nomeRem[100];
-
-    printf("Qual nome você deseja remover?\n");
-    scanf(" %[^\n]s", nomeRem);
-
-    for (j = 0; j < ultimoIndex; j++){
-        while (stringNomes[i] != '$'){
-            i = 0;
-            nomeComp[i] == stringNomes[j];
-            i++;
+    while (*pointer != '\0'){
+        if (*pointer == '$'){
+            nomePrint[count] = '\0';
+            printf("%s \n", nomePrint);
+            count = 0;
+        }else {
+            nomePrint[count] = *pointer;
+            count++;
         }
-
-        if ((strcmp(nomeComp, nomeRem)) == 0){
-            int tamanhoRem = strlen(nomeRem);
-            int inicioRem = i - tamanhoRem;
-
-            for (x = i; x < tamanhoRem; x++)
-
-        }
+        pointer++;
     }
 }
