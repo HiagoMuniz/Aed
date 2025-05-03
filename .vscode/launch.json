@@ -5,7 +5,7 @@
             "name": "Debug C/C++",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/main.exe",
+            "program": "${workspaceFolder}/treinoAula.exe",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
