@@ -1,11 +1,12 @@
 {
     "version": "0.2.0",
     "configurations": [
+        
         {
             "name": "Debug C/C++",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/treinoAula.exe",
+            "program": "${workspaceFolder}/ex1/src/output/main.exe",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
