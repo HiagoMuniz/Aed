@@ -1,3 +1,20 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+
+bool isPalindrome(int x);
+
+int main(){
+    int numero = -121;
+
+    if (isPalindrome(numero)){
+        printf("is palindrome");
+    }else{
+        printf("is not palindrome");
+    }
+}
+
+
 bool isPalindrome(int x) {
     int invertido = 0;
 
