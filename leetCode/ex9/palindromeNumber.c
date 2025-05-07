@@ -5,7 +5,7 @@
 bool isPalindrome(int x);
 
 int main(){
-    int numero = -121;
+    int numero = 1000660001;
 
     if (isPalindrome(numero)){
         printf("is palindrome");
@@ -16,7 +16,7 @@ int main(){
 
 
 bool isPalindrome(int x) {
-    int invertido = 0;
+    double invertido = 0;
 
     if ( x < 0 ){
         return false;
