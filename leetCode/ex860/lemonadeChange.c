@@ -51,12 +51,6 @@ bool lemonadeChange(int* bills, int billsSize) {
         }
     }
 
-    for ( i = 0; i < 3; i++ ){
-        if ( bilVector[i] < 0){
-            return false;
-       }
-    }
-
     return true;
     
 }
