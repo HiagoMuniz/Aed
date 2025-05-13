@@ -36,7 +36,6 @@ int main() {
 
 int removeDuplicates(int* nums, int numsSize) {
     int i = 0, j = 0, l = 0;
-    int k = numsSize;
 
     for ( i = 0; i < numsSize; i++ ){
         for ( j = i+1; j < numsSize; j++ ){
