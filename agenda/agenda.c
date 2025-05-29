@@ -1,9 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void addContact();
-void remContact();
-void printContact();
+void pushContact();
+void popContact();
+void findContact();
 void listAll();
 void freeAll();
 
@@ -12,34 +12,40 @@ int main(void){
 
     void *pBuffer = NULL;
 
-    // [opcao][qtdContatos]
-    pBuffer = malloc ( sizeof(int) * 2 ); 
-    *((int *)(pBuffer + sizeof(int))) = 0;
+    // [opcao][qtdContatos][tamanhoBuffer][proximaPosicção]
+    pBuffer = malloc ( sizeof(int) * 4 ); 
+    int *pMenu = ( int *)  pBuffer;
+    int *pAmount = ( int *)  ( pBuffer + sizeof(int) );
+    int *pBufferSize = ( int *)  ( pBuffer + sizeof(int) * 2 );
+    int *pNextPosition = ( int *)  ( pBuffer + sizeof(int) * 3 );
+
+
 
     for (;;){
 
-        printf("\n--- MENU ---\n");
-        printf("1 - Adicionar Pessoa\n");
-        printf("2 - Remover Pessoa\n");
-        printf("3 - Buscar Pessoa\n");
-        printf("4 - Listar todos\n");
-        printf("5 - Sair\n");
-        printf("Escolha uma opção: ");
+        printf( "\n--- MENU ---\n" );
+        printf( "1 - Adicionar Pessoa\n" );
+        printf( "2 - Remover Pessoa\n" );
+        printf( "3 - Buscar Pessoa\n" );
+        printf( "4 - Listar todos\n" );
+        printf( "5 - Sair\n" );
+        printf( "Escolha uma opção: " );
 
-        scanf("%d", (int *)pBuffer);
+        scanf( "%d", pMenu );
 
-        switch ( * ( ( int* ) pBuffer ) )
+        switch ( *pMenu )
         {
         case 1:
-            //addContact();
+            *((int *)(pBuffer + sizeof(int))) += 1;
+            //pushContact();
             break;
 
         case 2:
-            //remContact();
+            //popContact();
             break;
 
         case 3:
-            //printContact();
+            //findContact();
             break;
 
         case 4:
@@ -55,14 +61,14 @@ int main(void){
 
 
 void addContact(){
-
-}
-
-void remContact(){
     
 }
 
-void printContact(){
+void popContact(){
+    
+}
+
+void findContact(){
     
 }
 
