@@ -1,11 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
-void pushContact();
+void *pushContact();
 //void popContact();
 //void findContact();
-//void listAll();
-//void freeAll();
+void listAll();
 
 
 int main(void){
@@ -20,15 +20,13 @@ int main(void){
     int *pNextPosition = ( int *)  ( pBuffer + sizeof(int) * 3 );
 
     *pAmount = 0;
+    *pMenu = 0;
     *pBufferSize = sizeof(int) * 4;
     *pNextPosition = sizeof(int) * 4;
 
     for (;;){
 
     int *pMenu = ( int *)  pBuffer;
-    int *pAmount = ( int *)  ( pBuffer + sizeof(int) );
-    int *pBufferSize = ( int *)  ( pBuffer + sizeof(int) * 2 );
-    int *pNextPosition = ( int *)  ( pBuffer + sizeof(int) * 3 ); 
 
         printf( "\n--- MENU ---\n" );
         printf( "1 - Adicionar Pessoa\n" );
@@ -39,11 +37,12 @@ int main(void){
         printf( "Escolha uma opção: " );
 
         scanf( "%d", pMenu );
+        getchar();
 
         switch ( *pMenu )
         {
         case 1:
-            pushContact(pBuffer);
+            pBuffer = pushContact(pBuffer);
             break;
 
         case 2:
@@ -55,88 +54,131 @@ int main(void){
             break;
 
         case 4:
-            //listAll(pBuffer);
+            listAll(pBuffer);
             break;
 
         case 5:
-            //freeAll(pBuffer);
+            free(pBuffer);
             exit(1);
         }
     }
 }
 
 
-void pushContact(void *pBuffer){
+void *pushContact(void *pBuffer){
 
-    int *pMenu = ( int *)  pBuffer;
-    int *pAmount = ( int *)  ( pBuffer + sizeof(int) );
-    int *pBufferSize = ( int *)  ( pBuffer + sizeof(int) * 2 );
     int *pNextPosition = ( int *)  ( pBuffer + sizeof(int) * 3 ); 
 
+    void *tmp = realloc ( pBuffer, *pNextPosition + 3 * sizeof(int) + 100 * sizeof(char) );
+    
+    if (!tmp) {
+        printf("Erro ao alocar memória!\n");
+        return pBuffer;  
+    }
 
-    pBuffer = realloc ( pBuffer, *pNextPosition + 3 * sizeof(int) + 100 * sizeof(char) );
-    *pBufferSize += 3 * sizeof(int) + 2 * 50 * sizeof(char);
+    pBuffer = tmp;
 
-    int *pNameSize = (int *)(pBuffer + *pNextPosition);
-    printf("\tDigite o seu nome: ");
-    fgets((char *)(pBuffer + *pNextPosition + sizeof(int) ), 50, stdin);
-    *pNameSize = strlen((char *)(pBuffer + *pNextPosition + sizeof(int) )) + 1;
+    int *pBufferSize = ( int *)  ( pBuffer + sizeof(int) * 2 );
+    pNextPosition = ( int *)  ( pBuffer + sizeof(int) * 3 ); 
 
-    *pNextPosition += sizeof(int) + *pNameSize;
+    int *pNameSize = ( int * )( pBuffer + *pNextPosition );
 
-    int *pEmailSize = (int *)(pBuffer + *pNextPosition);
-    printf("\tDigite o seu email: ");
-    fgets((char *)(pBuffer + *pNextPosition + sizeof(int) ), 50, stdin);
-    *pEmailSize = strlen((char *)(pBuffer + *pNextPosition + sizeof(int) )) + 1;
+    printf( "\tDigite o seu nome: " );
+    fgets( (char * )( pBuffer + *pNextPosition + sizeof(int) ), 50, stdin );
+    char *name = (char *)(pBuffer + *pNextPosition + sizeof(int));
+
+    name[strcspn(name, "\n")] = 0;  // remove o '\n'
+    *pNameSize = strlen(name) + 1;
+
+    *pNextPosition += sizeof( int ) + *pNameSize;
+
+    int *pEmailSize = ( int * )( pBuffer + *pNextPosition );
+    printf( "\tDigite o seu email: " );
+    fgets( ( char * ) ( pBuffer + *pNextPosition + sizeof(int) ), 50, stdin );
+    char *email = (char *)(pBuffer + *pNextPosition + sizeof(int));
+
+    email[strcspn(email, "\n")] = 0;  // remove o '\n'
+    *pEmailSize = strlen(email) + 1;
 
     *pNextPosition += sizeof(int) + *pEmailSize;
 
-    int *pAge = (int *)(pBuffer + *pNextPosition);
-    printf("\tDigite a sua idade: ");
-    scanf("%d", (int *)(pBuffer + *pNextPosition));
+    printf( "\tDigite a sua idade: " );
+    scanf( "%d", (int *)(pBuffer + *pNextPosition ) );
     getchar(); 
 
     *pNextPosition += ( sizeof(int) );
 
     *pBufferSize = *pNextPosition;
 
-    pBuffer = realloc ( pBuffer, *pBufferSize );
+    tmp = realloc ( pBuffer, *pBufferSize );
 
-    *pAmount += 1;
-}
+    if (!tmp) {
+        printf("Erro ao alocar memória!\n");
+        return pBuffer;  
+    }
+    pBuffer = tmp;
 
-void popContact(void *pBuffer){
-    int *pMenu = ( int *)  pBuffer;
     int *pAmount = ( int *)  ( pBuffer + sizeof(int) );
-    int *pBufferSize = ( int *)  ( pBuffer + sizeof(int) * 2 );
-    int *pNextPosition = ( int *)  ( pBuffer + sizeof(int) * 3 ); 
+    *pAmount += 1;
+
+    return pBuffer;
+}
+/*
+void popContact(void *pBuffer){
+    //int *pMenu = ( int *)  pBuffer;
+    //int *pAmount = ( int *)  ( pBuffer + sizeof(int) );
+    //int *pBufferSize = ( int *)  ( pBuffer + sizeof(int) * 2 );
+    //int *pNextPosition = ( int *)  ( pBuffer + sizeof(int) * 3 ); 
 
 
 }
 
 void findContact(void *pBuffer){
-    int *pMenu = ( int *)  pBuffer;
-    int *pAmount = ( int *)  ( pBuffer + sizeof(int) );
-    int *pBufferSize = ( int *)  ( pBuffer + sizeof(int) * 2 );
-    int *pNextPosition = ( int *)  ( pBuffer + sizeof(int) * 3 ); 
+    //int *pMenu = ( int *)  pBuffer;
+    //int *pAmount = ( int *)  ( pBuffer + sizeof(int) );
+    //int *pBufferSize = ( int *)  ( pBuffer + sizeof(int) * 2 );
+    //int *pNextPosition = ( int *)  ( pBuffer + sizeof(int) * 3 ); 
 
 
 }
+*/
 
 void listAll(void *pBuffer){
-    int *pMenu = ( int *)  pBuffer;
+
     int *pAmount = ( int *)  ( pBuffer + sizeof(int) );
-    int *pBufferSize = ( int *)  ( pBuffer + sizeof(int) * 2 );
-    int *pNextPosition = ( int *)  ( pBuffer + sizeof(int) * 3 ); 
+    int *pCount = ( int *)  pBuffer;
+    *pCount = 0;
+
+    char *p = (char *)(pBuffer + sizeof(int) * 4);
+
+    while ( *pCount < *pAmount ){
+
+        int *pNameSize = (int *)p;
+        p += sizeof(int);
+
+        char *pName = p;
+        p += *pNameSize;
+
+        int *pEmailSize = (int *)p;
+        p += sizeof(int);
+
+        char *pEmail = p;
+        p += *pEmailSize;
+
+        int *pAge = (int *)p;
+        p += sizeof(int);
+
+        printf("Nome: %s\n", pName);
+        printf("Email: %s\n", pEmail);
+        printf("Idade: %d\n\n", *pAge);
+
+        (*pCount)++;
+        
+    }
+
 
 
 }
 
-void freeAll(void *pBuffer){
-    int *pMenu = ( int *)  pBuffer;
-    int *pAmount = ( int *)  ( pBuffer + sizeof(int) );
-    int *pBufferSize = ( int *)  ( pBuffer + sizeof(int) * 2 );
-    int *pNextPosition = ( int *)  ( pBuffer + sizeof(int) * 3 ); 
 
-}
 
