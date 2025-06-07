@@ -3,7 +3,7 @@
 #include <string.h>
 
 void *pushContact();
-//void *popContact();
+void *popContact();
 void *findContact();
 void listAll();
 
@@ -46,7 +46,7 @@ int main(void){
             break;
 
         case 2:
-            //pBuffer = popContact(pBuffer);
+            pBuffer = popContact(pBuffer);
             break;
 
         case 3:
@@ -123,17 +123,86 @@ void *pushContact(void *pBuffer){
 
     return pBuffer;
 }
-/*
-void *popContact(void *pBuffer){
-    //int *pMenu = ( int *)  pBuffer;
-    //int *pAmount = ( int *)  ( pBuffer + sizeof(int) );
-    //int *pBufferSize = ( int *)  ( pBuffer + sizeof(int) * 2 );
-    //int *pNextPosition = ( int *)  ( pBuffer + sizeof(int) * 3 ); 
 
+
+void *popContact(void *pBuffer){
+
+    int *pNextPosition = ( int *)  ( pBuffer + sizeof(int) * 3 ); 
+
+    void *tmp = realloc ( pBuffer, *pNextPosition + 50 * sizeof(char) );
+
+    if ( !tmp ){
+        printf("Erro ao alocar memória!\n");
+    }
+
+    pBuffer = tmp;
+
+    int *pCount = ( int *)  pBuffer;
+    int *pAmount = ( int *)  ( pBuffer + sizeof(int) );
+    pNextPosition = ( int *)  ( pBuffer + sizeof(int) * 3 ); 
+    
+    *pCount = 0;
+    char *p = (char *)( pBuffer + sizeof(int) * 4 );
+
+    printf( "\tDigite o nome do contato (REMOVER): " );
+    fgets( (char * )( pBuffer + *pNextPosition + sizeof(int) ), 50, stdin );
+    char *pNamePop = ( char * ) ( pBuffer + *pNextPosition + sizeof(int) );
+
+    pNamePop[strcspn(pNamePop, "\n")] = 0;  // remove o '\n'
+
+
+    while ( *pCount < *pAmount ){
+        char *pContactStart = p;
+
+        int *pNameSize = (int *)p;
+        p += sizeof(int);
+
+        char *pName = p;
+        p += *pNameSize;
+
+        int *pEmailSize = (int *)p;
+        p += sizeof(int);
+
+        char *pEmail = p;
+        p += *pEmailSize;
+
+        int *pAge = (int *)p;
+        p += sizeof(int);
+
+        if ( ( strcmp(pName, pNamePop) ) == 0 ){
+            *pCount =  ( sizeof(int) + *pNameSize + sizeof(int) + *pEmailSize + sizeof(int) );
+
+            memmove(
+                pContactStart,
+                p,
+                ( (char *) pBuffer + *pNextPosition) - (char *)p
+            );
+
+            *pNextPosition -= *pCount;
+            (*pAmount)--;
+
+            printf("\nContato removido com sucesso!\n");
+            return pBuffer;
+        }
+
+        (*pCount)++;
+    }
+
+    printf( "\n Nome não encontrado! \n");
+
+    tmp = realloc ( pBuffer, *pNextPosition );
+
+    // Reajusta a memória para eliminar o nome temporário
+    if ( !tmp ){
+        printf("Erro ao alocar memória!\n");
+        return pBuffer; 
+    }
+    pBuffer = tmp;
+
+    return pBuffer;
 
 }
 
-*/
 
 void *findContact( void *pBuffer ){
 
@@ -150,6 +219,7 @@ void *findContact( void *pBuffer ){
     int *pCount = ( int *)  pBuffer;
     int *pAmount = ( int *)  ( pBuffer + sizeof(int) );
     pNextPosition = ( int *)  ( pBuffer + sizeof(int) * 3 ); 
+    
     *pCount = 0;
     char *p = (char *)( pBuffer + sizeof(int) * 4 );
 
