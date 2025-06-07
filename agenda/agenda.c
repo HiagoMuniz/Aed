@@ -4,7 +4,7 @@
 
 void *pushContact();
 //void popContact();
-//void findContact();
+void *findContact();
 void listAll();
 
 
@@ -50,7 +50,7 @@ int main(void){
             break;
 
         case 3:
-            //findContact(pBuffer);
+            pBuffer = findContact(pBuffer);
             break;
 
         case 4:
@@ -133,15 +133,76 @@ void popContact(void *pBuffer){
 
 }
 
-void findContact(void *pBuffer){
-    //int *pMenu = ( int *)  pBuffer;
-    //int *pAmount = ( int *)  ( pBuffer + sizeof(int) );
-    //int *pBufferSize = ( int *)  ( pBuffer + sizeof(int) * 2 );
-    //int *pNextPosition = ( int *)  ( pBuffer + sizeof(int) * 3 ); 
-
-
-}
 */
+
+void *findContact( void *pBuffer ){
+
+    int *pNextPosition = ( int *)  ( pBuffer + sizeof(int) * 3 ); 
+
+    void *tmp = realloc ( pBuffer, *pNextPosition + 50 * sizeof(char) );
+
+    if ( !tmp ){
+        printf("Erro ao alocar memória!\n");
+    }
+
+    pBuffer = tmp;
+
+    int *pCount = ( int *)  pBuffer;
+    int *pAmount = ( int *)  ( pBuffer + sizeof(int) );
+    pNextPosition = ( int *)  ( pBuffer + sizeof(int) * 3 ); 
+    *pCount = 0;
+    char *p = (char *)( pBuffer + sizeof(int) * 4 );
+
+    printf( "\tDigite o seu nome: " );
+    fgets( (char * )( pBuffer + *pNextPosition + sizeof(int) ), 50, stdin );
+    char *pNameCompare = ( char * ) ( pBuffer + *pNextPosition + sizeof(int) );
+
+    pNameCompare[strcspn(pNameCompare, "\n")] = 0;  // remove o '\n'
+
+
+    while ( *pCount < *pAmount ){
+
+        int *pNameSize = (int *)p;
+        p += sizeof(int);
+
+        char *pName = p;
+        p += *pNameSize;
+
+        int *pEmailSize = (int *)p;
+        p += sizeof(int);
+
+        char *pEmail = p;
+        p += *pEmailSize;
+
+        int *pAge = (int *)p;
+        p += sizeof(int);
+
+        if ( strncmp(pName, pNameCompare, *pNameSize) == 0 ){
+            printf( " Nome encontrado: \n" );
+            printf("Nome: %s\n", pName);
+            printf("Email: %s\n", pEmail);
+            printf("Idade: %d\n\n", *pAge);
+            *pAmount = *pCount;
+            break;
+        }
+
+        (*pCount)++;
+        
+    }
+
+    if ( *pAmount != *pCount ){
+        printf( "Nome não encontrado! \n");
+    }
+
+    tmp = realloc ( pBuffer, *pNextPosition );
+
+    if ( !tmp ){
+        printf("Erro ao alocar memória!\n");
+    }
+    pBuffer = tmp;
+
+    return pBuffer;
+}
 
 void listAll(void *pBuffer){
 
@@ -175,9 +236,6 @@ void listAll(void *pBuffer){
         (*pCount)++;
         
     }
-
-
-
 }
 
 
