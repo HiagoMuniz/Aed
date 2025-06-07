@@ -3,7 +3,7 @@
 #include <string.h>
 
 void *pushContact();
-//void popContact();
+//void *popContact();
 void *findContact();
 void listAll();
 
@@ -46,7 +46,7 @@ int main(void){
             break;
 
         case 2:
-            //popContact(pBuffer);
+            //pBuffer = popContact(pBuffer);
             break;
 
         case 3:
@@ -124,7 +124,7 @@ void *pushContact(void *pBuffer){
     return pBuffer;
 }
 /*
-void popContact(void *pBuffer){
+void *popContact(void *pBuffer){
     //int *pMenu = ( int *)  pBuffer;
     //int *pAmount = ( int *)  ( pBuffer + sizeof(int) );
     //int *pBufferSize = ( int *)  ( pBuffer + sizeof(int) * 2 );
@@ -178,11 +178,12 @@ void *findContact( void *pBuffer ){
         p += sizeof(int);
 
         if ( strncmp(pName, pNameCompare, *pNameSize) == 0 ){
-            printf( " Nome encontrado: \n" );
+
+            printf( "\n Nome encontrado: \n\n" );
+            printf("=====================\n");
             printf("Nome: %s\n", pName);
             printf("Email: %s\n", pEmail);
             printf("Idade: %d\n\n", *pAge);
-            *pAmount = *pCount;
             break;
         }
 
@@ -190,8 +191,8 @@ void *findContact( void *pBuffer ){
         
     }
 
-    if ( *pAmount != *pCount ){
-        printf( "Nome não encontrado! \n");
+    if ( *pAmount == *pCount ){
+        printf( "\n Nome não encontrado! \n");
     }
 
     tmp = realloc ( pBuffer, *pNextPosition );
@@ -229,6 +230,7 @@ void listAll(void *pBuffer){
         int *pAge = (int *)p;
         p += sizeof(int);
 
+        printf("=====================\n");
         printf("Nome: %s\n", pName);
         printf("Email: %s\n", pEmail);
         printf("Idade: %d\n\n", *pAge);
