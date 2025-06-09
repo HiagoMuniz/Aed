@@ -28,16 +28,19 @@ int main(void){
 
     int *pMenu = ( int *)  pBuffer;
 
-        printf( "\n--- MENU ---\n" );
-        printf( "1 - Adicionar Pessoa\n" );
-        printf( "2 - Remover Pessoa\n" );
-        printf( "3 - Buscar Pessoa\n" );
-        printf( "4 - Listar todos\n" );
-        printf( "5 - Sair\n" );
-        printf( "Escolha uma opção: " );
+        do {
+            printf( "\n------- MENU -------\n" );
+            printf( "1 - Adicionar Pessoa\n" );
+            printf( "2 - Remover Pessoa\n" );
+            printf( "3 - Buscar Pessoa\n" );
+            printf( "4 - Listar todos\n" );
+            printf( "5 - Sair\n\n" );
+            printf( "Escolha uma opção (de 1 a 5): " );
 
-        scanf( "%d", pMenu );
-        getchar();
+            scanf( "%d", pMenu );
+            getchar();
+
+        } while ( *pMenu < 1 || *pMenu > 5 ); 
 
         switch ( *pMenu )
         {
@@ -144,7 +147,7 @@ void *popContact(void *pBuffer){
     *pCount = 0;
     char *p = (char *)( pBuffer + sizeof(int) * 4 );
 
-    printf( "\tDigite o nome do contato (REMOVER): " );
+    printf( "\n\tDigite o nome do contato (REMOVER): " );
     fgets( (char * )( pBuffer + *pNextPosition + sizeof(int) ), 50, stdin );
     char *pNamePop = ( char * ) ( pBuffer + *pNextPosition + sizeof(int) );
 
@@ -188,7 +191,7 @@ void *popContact(void *pBuffer){
         (*pCount)++;
     }
 
-    printf( "\n Nome não encontrado! \n");
+    printf( "\nNome não encontrado!\n");
 
     tmp = realloc ( pBuffer, *pNextPosition );
 
@@ -223,7 +226,7 @@ void *findContact( void *pBuffer ){
     *pCount = 0;
     char *p = (char *)( pBuffer + sizeof(int) * 4 );
 
-    printf( "\tDigite o seu nome: " );
+    printf( "\n\tDigite o nome (PESUISAR): " );
     fgets( (char * )( pBuffer + *pNextPosition + sizeof(int) ), 50, stdin );
     char *pNameCompare = ( char * ) ( pBuffer + *pNextPosition + sizeof(int) );
 
@@ -249,11 +252,12 @@ void *findContact( void *pBuffer ){
 
         if ( strncmp(pName, pNameCompare, *pNameSize) == 0 ){
 
-            printf( "\n Nome encontrado: \n\n" );
-            printf("=====================\n");
+            printf("\n============||============\n\n");
+            printf( "\tNome encontrado!\n\n" );
             printf("Nome: %s\n", pName);
             printf("Email: %s\n", pEmail);
-            printf("Idade: %d\n\n", *pAge);
+            printf("Idade: %d\n", *pAge);
+            printf("\n============||============\n\n");
             break;
         }
 
@@ -300,10 +304,10 @@ void listAll(void *pBuffer){
         int *pAge = (int *)p;
         p += sizeof(int);
 
-        printf("=====================\n");
+        printf("\n============||============\n\n");
         printf("Nome: %s\n", pName);
         printf("Email: %s\n", pEmail);
-        printf("Idade: %d\n\n", *pAge);
+        printf("Idade: %d\n", *pAge);
 
         (*pCount)++;
         
