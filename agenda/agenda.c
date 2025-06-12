@@ -61,6 +61,7 @@ int main(void){
             break;
 
         case 5:
+            printf( "\n Exiting... \n" );
             free(pBuffer);
             exit(1);
         }
@@ -78,7 +79,6 @@ void *pushContact(void *pBuffer){
         printf("Erro ao alocar memória!\n");
         return pBuffer;  
     }
-
     pBuffer = tmp;
 
     int *pBufferSize = ( int *)  ( pBuffer + sizeof(int) * 2 );
@@ -148,8 +148,8 @@ void *popContact(void *pBuffer){
     char *p = (char *)( pBuffer + sizeof(int) * 4 );
 
     printf( "\n\tDigite o nome do contato (REMOVER): " );
-    fgets( (char * )( pBuffer + *pNextPosition + sizeof(int) ), 50, stdin );
-    char *pNamePop = ( char * ) ( pBuffer + *pNextPosition + sizeof(int) );
+    fgets( (char * )( pBuffer + *pNextPosition ), 50, stdin );
+    char *pNamePop = ( char * ) ( pBuffer + *pNextPosition );
 
     pNamePop[strcspn(pNamePop, "\n")] = 0;  // remove o '\n'
 
@@ -227,8 +227,8 @@ void *findContact( void *pBuffer ){
     char *p = (char *)( pBuffer + sizeof(int) * 4 );
 
     printf( "\n\tDigite o nome (PESUISAR): " );
-    fgets( (char * )( pBuffer + *pNextPosition + sizeof(int) ), 50, stdin );
-    char *pNameCompare = ( char * ) ( pBuffer + *pNextPosition + sizeof(int) );
+    fgets( (char * )( pBuffer + *pNextPosition ), 50, stdin );
+    char *pNameCompare = ( char * ) ( pBuffer + *pNextPosition );
 
     pNameCompare[strcspn(pNameCompare, "\n")] = 0;  // remove o '\n'
 
