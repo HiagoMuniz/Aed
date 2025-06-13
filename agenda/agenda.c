@@ -2,17 +2,17 @@
 #include <stdlib.h>
 #include <string.h>
 
-void *pushContact();
-void *popContact();
-void *findContact();
-void listAll();
+void *PushContact();
+void *PopContact();
+void *FindContact();
+void ListAll();
 
 
 int main(void){
 
     void *pBuffer = NULL;
 
-    // [opcao][qtdContatos][tamanhoBuffer][proximaPosicção]
+    // [opcao][qtdContatos][tamanhoBuffer][proximaPosicção][contato1][...]
     pBuffer = malloc ( sizeof(int) * 4 ); 
     int *pMenu = ( int *)  pBuffer;
     int *pAmount = ( int *)  ( pBuffer + sizeof(int) );
@@ -45,21 +45,17 @@ int main(void){
         switch ( *pMenu )
         {
         case 1:
-            pBuffer = pushContact(pBuffer);
+            pBuffer = PushContact( pBuffer );
             break;
-
         case 2:
-            pBuffer = popContact(pBuffer);
+            pBuffer = PopContact( pBuffer );
             break;
-
         case 3:
-            pBuffer = findContact(pBuffer);
+            pBuffer = FindContact( pBuffer );
             break;
-
         case 4:
-            listAll(pBuffer);
+            ListAll( pBuffer );
             break;
-
         case 5:
             printf( "\n Exiting... \n" );
             free(pBuffer);
@@ -69,14 +65,14 @@ int main(void){
 }
 
 
-void *pushContact(void *pBuffer){
+void *PushContact(void *pBuffer){
 
     int *pNextPosition = ( int *)  ( pBuffer + sizeof(int) * 3 ); 
 
     void *tmp = realloc ( pBuffer, *pNextPosition + 3 * sizeof(int) + 100 * sizeof(char) );
     
     if (!tmp) {
-        printf("Erro ao alocar memória!\n");
+        printf( "Erro ao alocar memória!\n" );
         return pBuffer;  
     }
     pBuffer = tmp;
@@ -87,26 +83,26 @@ void *pushContact(void *pBuffer){
     int *pNameSize = ( int * )( pBuffer + *pNextPosition );
 
     printf( "\tDigite o seu nome: " );
-    fgets( (char * )( pBuffer + *pNextPosition + sizeof(int) ), 50, stdin );
-    char *name = (char *)(pBuffer + *pNextPosition + sizeof(int));
+    fgets( ( char * )( pBuffer + *pNextPosition + sizeof(int) ), 50, stdin );
+    char *name = ( char * )( pBuffer + *pNextPosition + sizeof( int ) );
 
-    name[strcspn(name, "\n")] = 0;  // remove o '\n'
-    *pNameSize = strlen(name) + 1;
+    name[ strcspn( name, "\n" ) ] = 0;
+    *pNameSize = strlen( name ) + 1;
 
     *pNextPosition += sizeof( int ) + *pNameSize;
 
     int *pEmailSize = ( int * )( pBuffer + *pNextPosition );
     printf( "\tDigite o seu email: " );
     fgets( ( char * ) ( pBuffer + *pNextPosition + sizeof(int) ), 50, stdin );
-    char *email = (char *)(pBuffer + *pNextPosition + sizeof(int));
+    char *email = ( char * )( pBuffer + *pNextPosition + sizeof( int ) );
 
-    email[strcspn(email, "\n")] = 0;  // remove o '\n'
-    *pEmailSize = strlen(email) + 1;
+    email[ strcspn( email, "\n" ) ] = 0;
+    *pEmailSize = strlen( email ) + 1;
 
-    *pNextPosition += sizeof(int) + *pEmailSize;
+    *pNextPosition += sizeof( int ) + *pEmailSize;
 
     printf( "\tDigite a sua idade: " );
-    scanf( "%d", (int *)(pBuffer + *pNextPosition ) );
+    scanf( "%d", ( int * )( pBuffer + *pNextPosition ) );
     getchar(); 
 
     *pNextPosition += ( sizeof(int) );
@@ -115,8 +111,8 @@ void *pushContact(void *pBuffer){
 
     tmp = realloc ( pBuffer, *pBufferSize );
 
-    if (!tmp) {
-        printf("Erro ao alocar memória!\n");
+    if ( !tmp ) {
+        printf( "Erro ao alocar memória!\n" );
         return pBuffer;  
     }
     pBuffer = tmp;
@@ -128,14 +124,13 @@ void *pushContact(void *pBuffer){
 }
 
 
-void *popContact(void *pBuffer){
-
+void *PopContact( void *pBuffer ){
     int *pNextPosition = ( int *)  ( pBuffer + sizeof(int) * 3 ); 
 
     void *tmp = realloc ( pBuffer, *pNextPosition + 50 * sizeof(char) );
 
     if ( !tmp ){
-        printf("Erro ao alocar memória!\n");
+        printf( "Erro ao alocar memória!\n" );
     }
 
     pBuffer = tmp;
@@ -148,31 +143,30 @@ void *popContact(void *pBuffer){
     char *p = (char *)( pBuffer + sizeof(int) * 4 );
 
     printf( "\n\tDigite o nome do contato (REMOVER): " );
-    fgets( (char * )( pBuffer + *pNextPosition ), 50, stdin );
+    fgets( ( char * )( pBuffer + *pNextPosition ), 50, stdin );
     char *pNamePop = ( char * ) ( pBuffer + *pNextPosition );
 
-    pNamePop[strcspn(pNamePop, "\n")] = 0;  // remove o '\n'
-
+    pNamePop[ strcspn( pNamePop, "\n" ) ] = 0;
 
     while ( *pCount < *pAmount ){
         char *pContactStart = p;
 
-        int *pNameSize = (int *)p;
-        p += sizeof(int);
+        int *pNameSize = ( int * )p;
+        p += sizeof( int );
 
         char *pName = p;
         p += *pNameSize;
 
-        int *pEmailSize = (int *)p;
+        int *pEmailSize = ( int * )p;
         p += sizeof(int);
 
         char *pEmail = p;
         p += *pEmailSize;
 
-        int *pAge = (int *)p;
-        p += sizeof(int);
+        int *pAge = ( int * )p;
+        p += sizeof( int );
 
-        if ( ( strcmp(pName, pNamePop) ) == 0 ){
+        if ( ( strcmp( pName, pNamePop ) ) == 0 ){
             *pCount =  ( sizeof(int) + *pNameSize + sizeof(int) + *pEmailSize + sizeof(int) );
 
             memmove(
@@ -182,22 +176,22 @@ void *popContact(void *pBuffer){
             );
 
             *pNextPosition -= *pCount;
-            (*pAmount)--;
+            ( *pAmount )--;
 
-            printf("\nContato removido com sucesso!\n");
+            printf( "\nContato removido com sucesso!\n" );
             return pBuffer;
         }
 
         (*pCount)++;
     }
 
-    printf( "\nNome não encontrado!\n");
+    printf( "\nNome não encontrado!\n" );
 
     tmp = realloc ( pBuffer, *pNextPosition );
 
     // Reajusta a memória para eliminar o nome temporário
     if ( !tmp ){
-        printf("Erro ao alocar memória!\n");
+        printf( "Erro ao alocar memória!\n" );
         return pBuffer; 
     }
     pBuffer = tmp;
@@ -207,110 +201,105 @@ void *popContact(void *pBuffer){
 }
 
 
-void *findContact( void *pBuffer ){
+void *FindContact( void *pBuffer ){
 
     int *pNextPosition = ( int *)  ( pBuffer + sizeof(int) * 3 ); 
 
     void *tmp = realloc ( pBuffer, *pNextPosition + 50 * sizeof(char) );
 
     if ( !tmp ){
-        printf("Erro ao alocar memória!\n");
+        printf( "Erro ao alocar memória!\n" );
     }
-
     pBuffer = tmp;
 
-    int *pCount = ( int *)  pBuffer;
-    int *pAmount = ( int *)  ( pBuffer + sizeof(int) );
-    pNextPosition = ( int *)  ( pBuffer + sizeof(int) * 3 ); 
+    int *pCount = ( int * )  pBuffer;
+    int *pAmount = ( int * )  ( pBuffer + sizeof(int) );
+    pNextPosition = ( int * )  ( pBuffer + sizeof(int) * 3 ); 
     
     *pCount = 0;
-    char *p = (char *)( pBuffer + sizeof(int) * 4 );
+    char *p = ( char * )( pBuffer + sizeof(int) * 4 );
 
     printf( "\n\tDigite o nome (PESUISAR): " );
     fgets( (char * )( pBuffer + *pNextPosition ), 50, stdin );
     char *pNameCompare = ( char * ) ( pBuffer + *pNextPosition );
 
-    pNameCompare[strcspn(pNameCompare, "\n")] = 0;  // remove o '\n'
-
+    pNameCompare[ strcspn ( pNameCompare, "\n" ) ] = 0;  
 
     while ( *pCount < *pAmount ){
 
-        int *pNameSize = (int *)p;
-        p += sizeof(int);
+        int *pNameSize = ( int * )p;
+        p += sizeof( int );
 
         char *pName = p;
         p += *pNameSize;
 
-        int *pEmailSize = (int *)p;
-        p += sizeof(int);
+        int *pEmailSize = ( int * )p;
+        p += sizeof( int );
 
         char *pEmail = p;
         p += *pEmailSize;
 
-        int *pAge = (int *)p;
-        p += sizeof(int);
+        int *pAge = ( int * )p;
+        p += sizeof( int );
 
-        if ( strncmp(pName, pNameCompare, *pNameSize) == 0 ){
+        if ( strncmp( pName, pNameCompare, *pNameSize ) == 0 ){
 
-            printf("\n============||============\n\n");
+            printf( "\n============||============\n\n" );
             printf( "\tNome encontrado!\n\n" );
-            printf("Nome: %s\n", pName);
-            printf("Email: %s\n", pEmail);
-            printf("Idade: %d\n", *pAge);
-            printf("\n============||============\n\n");
+            printf( "Nome: %s\n", pName );
+            printf( "Email: %s\n", pEmail );
+            printf( "Idade: %d\n", *pAge );
+            printf( "\n============||============\n\n" );
             break;
         }
-
-        (*pCount)++;
-        
+        ( *pCount )++;
     }
 
     if ( *pAmount == *pCount ){
-        printf( "\n Nome não encontrado! \n");
+        printf( "\n Nome não encontrado! \n" );
     }
 
     tmp = realloc ( pBuffer, *pNextPosition );
 
     if ( !tmp ){
-        printf("Erro ao alocar memória!\n");
+        printf( "Erro ao alocar memória!\n" );
     }
     pBuffer = tmp;
 
     return pBuffer;
 }
 
-void listAll(void *pBuffer){
+void ListAll( void *pBuffer ){
 
-    int *pAmount = ( int *)  ( pBuffer + sizeof(int) );
-    int *pCount = ( int *)  pBuffer;
+    int *pAmount = ( int * )  ( pBuffer + sizeof(int) );
+    int *pCount = ( int * )  pBuffer;
     *pCount = 0;
 
-    char *p = (char *)(pBuffer + sizeof(int) * 4);
+    char *p = ( char * )( pBuffer + sizeof(int) * 4 );
 
     while ( *pCount < *pAmount ){
 
-        int *pNameSize = (int *)p;
-        p += sizeof(int);
+        int *pNameSize = ( int * )p;
+        p += sizeof( int );
 
         char *pName = p;
         p += *pNameSize;
 
-        int *pEmailSize = (int *)p;
-        p += sizeof(int);
+        int *pEmailSize = ( int * )p;
+        p += sizeof( int );
 
         char *pEmail = p;
         p += *pEmailSize;
 
-        int *pAge = (int *)p;
-        p += sizeof(int);
+        int *pAge = ( int * )p;
+        p += sizeof( int );
 
-        printf("\n============||============\n\n");
-        printf("Nome: %s\n", pName);
-        printf("Email: %s\n", pEmail);
-        printf("Idade: %d\n", *pAge);
+        printf( "\n============||============\n\n" );
+        printf( "Nome: %s\n", pName );
+        printf( "Email: %s\n", pEmail );
+        printf( "Idade: %d\n", *pAge );
 
-        (*pCount)++;
-        
+        ( *pCount )++;   
     }
 }
 
