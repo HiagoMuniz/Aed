@@ -11,9 +11,9 @@ For example, if licensePlate = "aBc 12c", then it contains letters 'a', 'b' (ign
 
 Return the shortest completing word in words. It is guaranteed an answer exists. If there are multiple shortest completing words, return the first one that occurs in words.
 
-1. Explicar o problema e mostrar as direfenças dos codigos ();
-2. Explicar o codigo de aula/codigo de casa ();
-3. Qual foi a logica de implementação e os problemas (); 
-4. Mostrar rodando no LeetCode ();
-5. Complexidade E Dr memory ();
-6. Mostrar outra solução/editorial();
+1. Explicar o problema e mostrar as direfenças dos codigos (x);
+2. Explicar o codigo de aula/codigo de casa (X);
+3. Qual foi a logica de implementação e os problemas (X); 
+4. Mostrar rodando no LeetCode (X);
+5. Complexidade E Dr memory (X);
+6. Mostrar outra solução/editorial(X);
